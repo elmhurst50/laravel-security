@@ -2,5 +2,10 @@
     "name": "sam.joyce/laravel-security",
     "description": "Laravel security for apps",
     "type": "package",
+    "autoload": {
+        "psr-4": {
+            "SamJoyce777\\LaravelSecurity\\": "src/"
+        }
+    },
     "require": {}
 }
