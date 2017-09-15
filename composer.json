@@ -1,5 +1,5 @@
 {
-    "name": "sam.joyce/laravel-security",
+    "name": "samjoyce777/laravel-security",
     "description": "Laravel security for apps",
     "type": "package",
     "autoload": {
