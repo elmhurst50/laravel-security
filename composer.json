@@ -1,0 +1,6 @@
+{
+    "name": "sam.joyce/laravel-security",
+    "description": "Laravel security for apps",
+    "type": "package",
+    "require": {}
+}
