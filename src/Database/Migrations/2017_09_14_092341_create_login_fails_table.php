@@ -14,9 +14,10 @@ class CreateLoginFailsTable extends Migration
      */
     public function up()
     {
-        Schema::create(config('security.login_fails_table'), function (Blueprint $table) {
-            $table->boolean('email');
-            $table->boolean('attempted_password');
+        Schema::create('login_fails', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('email');
+            $table->string('attempted_password');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateLoginFailsTable extends Migration
      */
     public function down()
     {
-        Schema::drop(config('security.login_fails_table'));
+        Schema::drop('login_fails');
     }
 }

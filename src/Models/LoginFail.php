@@ -8,4 +8,6 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 class LoginFail extends Model
 {
     protected $guarded = ['id'];
+
+    protected $table = 'login_fails';
 }

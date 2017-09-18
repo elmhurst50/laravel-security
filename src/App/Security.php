@@ -22,7 +22,7 @@ class Security{
                         getenv('HTTP_FORWARDED') ?:
                             getenv('REMOTE_ADDR');
 
-        return in_array($ip, config('security::valid_ips'));
+        return in_array($ip, config('vendor.security.valid_ips'));
     }
 
     /**
@@ -42,11 +42,21 @@ class Security{
      */
     public function shouldAccountBeLocked($email)
     {
-        $failed_logins = LoginFail::where('email', $email)->whereBetween('created_at', [Carbon::now()->toDateTimeString(), Carbon::now()->subDay()->toDateTimeString()])->count();
+        $failed_logins = LoginFail::where('email', $email)->whereBetween('created_at', [Carbon::now()->subDay()->toDateTimeString(), Carbon::now()->toDateTimeString()])->count();
 
-        if($failed_logins >= config('security::max_daily_login_failures')) return true;
+        if($failed_logins >= config('vendor.security.max_daily_login_failures')) return true;
 
         return false;
+    }
+
+    /**
+     * Returns where of not the user account is locked
+     * @param $user_model
+     * @return mixed
+     */
+    public function isUserLocked($user_model)
+    {
+        return $user_model->login_locked;
     }
 
     /**
@@ -55,9 +65,9 @@ class Security{
      * @param $email
      * @return bool
      */
-    public function lockAccount($model, $email)
+    public function lockAccount($user_model, $email)
     {
-        $user = $model->where('email', $email)->first();
+        $user = $user_model->where('email', $email)->first();
 
         if(!$user) return false;
 
@@ -81,5 +91,26 @@ class Security{
         $user->update(['login_locked' => false]);
 
         return true;
+    }
+
+    /**
+     * This checks to see if request has a valid security cookie
+     * @param \Illuminate\Http\Request $request
+     * @return bool
+     */
+    public function hasSecurityCookie(\Illuminate\Http\Request $request)
+    {
+        return $request->cookie('laravel-security') == config('vendor.security.cookie_private_key');
+    }
+
+    public function sendCookieEmail($email)
+    {
+        try{
+            \Mail::send('security::email-cookie', ['key' => config('vendor.security.cookie_public_key')], function($message) use ($email){
+                $message->to($email);
+            });
+        }catch(\Exception $e){dd($e->getMessage());
+            \Log::debug('Security cookie email could not be sent to '. $email);
+        }
     }
 }

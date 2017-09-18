@@ -14,7 +14,7 @@ class AddUserFields extends Migration
      */
     public function up()
     {
-        Schema::table(config('security.users_table'), function (Blueprint $table) {
+        Schema::table(config('vendor.security.users_table'), function (Blueprint $table) {
             $table->boolean('restrict_ip')->default(true);
             $table->boolean('login_locked')->default(false);
         });
@@ -27,7 +27,7 @@ class AddUserFields extends Migration
      */
     public function down()
     {
-        Schema::table(config('security.users_table'), function (Blueprint $table) {
+        Schema::table(config('vendor.security.users_table'), function (Blueprint $table) {
             $table->dropColumn('restrict_ip');
             $table->dropColumn('login_locked');
         });

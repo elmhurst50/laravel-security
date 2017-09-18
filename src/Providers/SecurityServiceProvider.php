@@ -1,6 +1,5 @@
 <?php namespace SamJoyce777\LaravelSecurity\Providers;
 
-use App\Managers\Images\ImageManager;
 use Illuminate\Support\ServiceProvider;
 
 class SecurityServiceProvider extends ServiceProvider
@@ -12,12 +11,18 @@ class SecurityServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (! $this->app->routesAreCached()) {
+            require __DIR__.'/../Http/Routes/routes.php';
+        }
+
+        $this->loadViewsFrom(__DIR__.'/../Resources/Views', 'security');
+
         $this->publishes([
             __DIR__.'/../Database/Migrations' => database_path('migrations'),
         ], 'migrations');
 
         $this->publishes([
-            __DIR__.'/../Database/Config' => config_path('vendor.security'),
+            __DIR__.'/../Config' => config_path('vendor'),
         ], 'config');
     }
 

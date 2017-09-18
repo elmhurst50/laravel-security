@@ -1,0 +1,1 @@
+Security confirmation applied to this device.
