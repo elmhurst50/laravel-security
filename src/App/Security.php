@@ -61,17 +61,12 @@ class Security{
 
     /**
      * Locks the users account setting
-     * @param $model
      * @param $email
      * @return bool
      */
-    public function lockAccount($user_model, $email)
+    public function lockAccount($email)
     {
-        $user = $user_model->where('email', $email)->first();
-
-        if(!$user) return false;
-
-        $user->update(['login_locked' => true]);
+        \DB::table(config('vendor.security.users_table'))->where('email', $email)->update(['login_locked' => true]);
 
         return true;
     }
@@ -79,16 +74,11 @@ class Security{
     /**
      * Unlocks the users account setting
      * @param $email
-     * @param $user_model
      * @return bool
      */
-    public function unlockAccount($email, $user_model)
+    public function unlockAccount($email)
     {
-        $user = $user_model->where('email', $email)->first();
-
-        if(!$user) return false;
-
-        $user->update(['login_locked' => false]);
+        \DB::table(config('vendor.security.users_table'))->where('email', $email)->update(['login_locked' => false]);
 
         return true;
     }
