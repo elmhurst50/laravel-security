@@ -22,7 +22,7 @@ class Security{
                         getenv('HTTP_FORWARDED') ?:
                             getenv('REMOTE_ADDR');
 
-        return in_array($ip, config('vendor.security.valid_ips'));
+        return in_array($ip, config('security.valid_ips'));
     }
 
     /**
@@ -44,7 +44,7 @@ class Security{
     {
         $failed_logins = LoginFail::where('email', $email)->whereBetween('created_at', [Carbon::now()->subDay()->toDateTimeString(), Carbon::now()->toDateTimeString()])->count();
 
-        if($failed_logins >= config('vendor.security.max_daily_login_failures')) return true;
+        if($failed_logins >= config('security.max_daily_login_failures')) return true;
 
         return false;
     }
@@ -66,7 +66,7 @@ class Security{
      */
     public function lockAccount($email)
     {
-        \DB::table(config('vendor.security.users_table'))->where('email', $email)->update(['login_locked' => true]);
+        \DB::table(config('security.users_table'))->where('email', $email)->update(['login_locked' => true]);
 
         return true;
     }
@@ -78,7 +78,7 @@ class Security{
      */
     public function unlockAccount($email)
     {
-        \DB::table(config('vendor.security.users_table'))->where('email', $email)->update(['login_locked' => false]);
+        \DB::table(config('security.users_table'))->where('email', $email)->update(['login_locked' => false]);
 
         return true;
     }
@@ -90,13 +90,13 @@ class Security{
      */
     public function hasSecurityCookie(\Illuminate\Http\Request $request)
     {
-        return $request->cookie('laravel-security') == config('vendor.security.cookie_private_key');
+        return $request->cookie('laravel-security') == config('security.cookie_private_key');
     }
 
     public function sendCookieEmail($email)
     {
         try{
-            \Mail::send('security::email-cookie', ['key' => config('vendor.security.cookie_public_key')], function($message) use ($email){
+            \Mail::send('security::email-cookie', ['key' => config('security.cookie_public_key')], function($message) use ($email){
                 $message->to($email);
             });
         }catch(\Exception $e){dd($e->getMessage());
