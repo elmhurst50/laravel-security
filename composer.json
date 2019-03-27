@@ -7,5 +7,12 @@
             "SamJoyce777\\LaravelSecurity\\": "src/"
         }
     },
-    "require": {}
+    "require": {},
+    "extra":{
+        "laravel":{
+            "providers":[
+                "SamJoyce777\\LaravelSecurity\\Providers\\SecurityServiceProvider"
+            ]
+        }
+    }
 }
