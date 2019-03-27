@@ -22,7 +22,7 @@ class SecurityServiceProvider extends ServiceProvider
         ], 'migrations');
 
         $this->publishes([
-            __DIR__.'/../Config' => config_path('vendor'),
+            __DIR__.'/../Config/security.php' => config_path('security.php'),
         ], 'config');
     }
 
